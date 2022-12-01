@@ -4,9 +4,18 @@ import sys
 
 #To be able to read any video and files that we ask terminal to modify
 cap = cv2.VideoCapture(sys.argv[1])
-bck = cv2.imread(sys.argv[2])
 _, frame = cap.read()
-i = cv2.resize(bck,dsize=(frame.shape[1],frame.shape[0]))
+#modify background by its file format
+bg = str(sys.argv[2])
+filename = bg[len(bg)-3:len(bg)]
+if filename == "mp4" or filename == "avi":
+    bck = cv2.VideoCapture(sys.argv[2])
+else:
+    bck = cv2.imread(sys.argv[2])
+    i = cv2.resize(bck,dsize=(frame.shape[1],frame.shape[0]))
+
+
+
 
 #Saving our chroma video in mp4 format
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -16,6 +25,11 @@ while(1):
     # Take each frame
     _, frame = cap.read()
 
+    if filename == "mp4" or filename == "avi":
+        _, bframe = bck.read()
+        i = cv2.resize(bframe,dsize=(frame.shape[1],frame.shape[0]))
+
+        
     # Convert BGR to HSV
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
